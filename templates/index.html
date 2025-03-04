@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="header">
+        <header>To-Do List</header>
+        <nav>
+            <a href="/about">About</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <a href="/?filter=all" class="{% if filter_type == 'all' %}active{% endif %}">All</a>
+            <a href="/?filter=pending" class="{% if filter_type == 'pending' %}active{% endif %}">Pending</a>
+            <a href="/?filter=completed" class="{% if filter_type == 'completed' %}active{% endif %}">Completed</a>
+        </div>
+
+        <form action="/add" method="post">
+            <input type="text" name="task" placeholder="Enter a new task" required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li class="task {% if task.done %}done{% endif %}">
+                    {{ task.task }}
+                    <div class="actions">
+                        {% if not task.done %}
+                            <a href="/done/{{ loop.index0 }}" class="button">✓ Done</a>
+                        {% endif %}
+                        <a href="/delete/{{ loop.index0 }}" class="button delete-btn">✕ Delete</a>
+                    </div>
+                </li>
+            {% else %}
+                <p>No tasks found. Add your first task above!</p>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
